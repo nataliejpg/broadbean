@@ -4,7 +4,7 @@ from broadbean.atoms import sine, ramp, flat, zero, marker_on, marker_off
 from broadbean.types import ForgedSequenceType
 from broadbean.plotting import plotter
 from broadbean.tools import check_sequence_duration_consistent
-from broadbean.transformations import make_delcarative_linear_transformation
+from broadbean.transformations import make_declarative_linear_transformation
 import broadbean
 
 
@@ -49,19 +49,19 @@ def read_element(data):
 def read_transformation(data):
         transformation = None
         if data:
-            if data['type'] == 'declarative_linear_transformation':
-                transformation = read_simple_transformation(data['data'])
+            if data['type'] == 'linear_transformation':
+                transformation = _read_blinear_transformation(data['data'], make_linear_transformation)
+            if data['type'] == 'bilinear_transformation':
+                transformation = _read_blinear_transformation(data['data'], make_bilinear_transformation)
         return transformation
 
-def read_simple_transformation(data):
+def _read_blinear_transformation(data, factory):
     items = []
     for item in data:
         assigned, l = get_single_entry(item)
         independents = [tuple(pair) for pair in l]
         items.append((assigned, independents))
-    return make_delcarative_linear_transformation(items)
-
-
+    return factory(items)
 
 def write_segment(seg):
     if isinstance(seg, SegmentGroup):

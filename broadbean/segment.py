@@ -118,7 +118,7 @@ class Segment(_BaseSegment):
         duration = self.get('duration', **context)
 
         # check minimum length
-        int_dur = round(duration*SR)
+        int_dur = int(round(duration*SR))
         # TODO: make this a warning
         # if int_dur < 2:
         #     # get rid of this restriction, which is totally unecessary
